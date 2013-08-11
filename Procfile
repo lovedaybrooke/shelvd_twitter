@@ -1,1 +1,1 @@
-web: gunicorn shelvd_twitter.wsgi
+streamworker: python streamer.py
