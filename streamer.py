@@ -1,10 +1,12 @@
+import os
+
 import twitter
 
 auth = twitter.OAuth(
-            consumer_key=ENV['CONSUMER_KEY'],
-            consumer_secret=ENV['CONSUMER_SECRET'],
-            token=ENV['TOKEN_KEY'],
-            token_secret=ENV['TOKEN_SECRET']
+            consumer_key=os.environ['CONSUMER_KEY'],
+            consumer_secret=os.environ['CONSUMER_SECRET'],
+            token=os.environ['TOKEN_KEY'],
+            token_secret=os.environ['TOKEN_SECRET']
         )
 
 twitter_userstream = twitter.TwitterStream(auth=auth,
