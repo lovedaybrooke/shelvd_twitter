@@ -16,11 +16,7 @@ twitter_userstream = twitter.TwitterStream(auth=auth,
 
 for msg in twitter_userstream.user():
     if 'direct_message' in msg:
-    	if msg['direct_message']['sender_screen_name'] != "shelvd":
-	    	input_text = msg['direct_message']['text']
-            message = ("I got this too! ({0})").format(input_text)
-	    	t = twitter.Twitter(auth=auth)
-	        t.direct_messages.new(user=os.environ['TWITTER_HANDLE'],
-	        	text=message)
+        if msg['direct_message']['sender_screen_name'] != "shelvd":
+            input_text = msg['direct_message']['text']
             requests.post("http://shelvd.herokuapp.com/", data={
                 "bkinput": input_text, "source": "twitter"})
