@@ -18,5 +18,5 @@ for msg in twitter_userstream.user():
     if 'direct_message' in msg:
         if msg['direct_message']['sender_screen_name'] != "shelvd":
             input_text = msg['direct_message']['text']
-            requests.post("http://shelvd.herokuapp.com/", data={
+            requests.post("http://shelvd.herokuapp.com/receive-input", data={
                 "bkinput": input_text, "source": "twitter"})
