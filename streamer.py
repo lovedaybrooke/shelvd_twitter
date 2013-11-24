@@ -1,22 +1,23 @@
 import os
+import logging
 
-import twitter
+from twython import TwythonStreamer
 import requests
 
+class MyStreamer(TwythonStreamer):
+    def on_success(self, msg):
+        if 'direct_message' in msg.keys():
+            if msg['direct_message']['sender_screen_name'] != "shelvd":
+                logging.info(msg['direct_message']['text'])
+                requests.post("http://shelvd.herokuapp.com/receive-input",
+                    data={"bkinput": msg['direct_message']['text'],
+                    "source": "twitter"})
 
-auth = twitter.OAuth(
-            consumer_key=os.environ['CONSUMER_KEY'],
-            consumer_secret=os.environ['CONSUMER_SECRET'],
-            token=os.environ['TOKEN_KEY'],
-            token_secret=os.environ['TOKEN_SECRET']
-        )
+    def on_error(self, status_code, data):
+        logging.error(status_code)
+        logging.error(data)
 
-twitter_userstream = twitter.TwitterStream(auth=auth,
-    domain='userstream.twitter.com')
+twitter = MyStreamer(os.environ['CONSUMER_KEY'], os.environ['CONSUMER_SECRET'],
+            os.environ['TOKEN_KEY'], os.environ['TOKEN_SECRET'])
 
-for msg in twitter_userstream.user():
-    if 'direct_message' in msg:
-        if msg['direct_message']['sender_screen_name'] != "shelvd":
-            input_text = msg['direct_message']['text']
-            requests.post("http://shelvd.herokuapp.com/receive-input", data={
-                "bkinput": input_text, "source": "twitter"})
+twitter.user()
